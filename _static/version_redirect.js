@@ -19,7 +19,7 @@ if (versionParam) {
     $.getJSON( "versions.json", function (data) {
         console.log('versions list', data);
         var items = [];
-        $.each( data, function( key, val ) {
+        $.each( data.entries, function( key, val ) {
             items.push( "<li id='" + key + "'>" + val + "</li>" );
         });
 
