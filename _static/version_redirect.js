@@ -16,7 +16,7 @@ function redirectToVersion(version) {
 }
 
 if (versionParam) {
-    $.getJSON( "/versions.json", function (data) {
+    $.getJSON( "versions.json", function (data) {
         console.log('versions list', data);
         var items = [];
         $.each( data, function( key, val ) {
