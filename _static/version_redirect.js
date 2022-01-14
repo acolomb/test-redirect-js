@@ -1,9 +1,3 @@
-const urlParams = new URLSearchParams(window.location.search);
-const versionParam = urlParams.get('version');
-
-console.log('Script called with parameter:', versionParam);
-
-
 var collator = new Intl.Collator(undefined, {numeric: true, sensitivity: 'base'});
 
 
@@ -39,14 +33,7 @@ function stripVersionPath(path, versions) {
     return path;
 }
 
-function redirectToVersion(version, tail) {
-    var newPath = '';
-    if (version) {
-        newPath += '/' + version;
-    }
-    if (tail) {
-        newPath += tail;
-    }
+function redirectToPath(newPath) {
     const hash = window.location.href.indexOf('#');
     if (hash != -1) {
         newPath += window.location.href.slice(hash);
@@ -58,30 +45,47 @@ function redirectToVersion(version, tail) {
     }
 }
 
-if (versionParam) {
-    var versionsAvailable = [];
-    $.getJSON( "versions.json", function (data) {
-        versionsAvailable = data.entries;
-        const useVersion = findBestVersion(versionParam, versionsAvailable);
+function checkVersionRedirect(target, available) {
+    const useVersion = findBestVersion(target, available);
+    console.log('best match', useVersion);
+    const tail = stripVersionPath(window.location.pathname, available + [target]);
 
-        console.log('best match', useVersion);
+    var newPath = '';
+    if (useVersion) {
+        newPath += '/' + version;
+    }
+    if (tail) {
+        newPath += tail;
+    }
+    redirectToPath(newPath);
+}
 
-        const tail = stripVersionPath(window.location.pathname,
-                                      versionsAvailable + [versionParam]);
-        redirectToVersion(useVersion, tail);
-    });
-
-    var testData = [];
-    $.getJSON( "testdata.json", function (testData) {
+function testVersionData(available) {
+    $.getJSON("testdata.json").then(function (testData) {
         //testData = testData.map(a => a + '-foo');
         testData.sort(collator.compare).reverse();
         var items = [];
         $.each(testData, function (key, val) {
-            items.push("<tr><td>" + val + "</td><td>" + findBestVersion(val, versionsAvailable) + "</td></tr>");
+            items.push("<tr><td>" + val + "</td><td>"
+                       + findBestVersion(val, available) + "</td></tr>");
         });
-        $( "<table/>", {
+        $("<table/>", {
             "class": "my-new-list",
-            html: items.join( "" )
-        }).appendTo( "body" );
+            html: items.join("")
+        }).appendTo("body");
+    });
+}
+
+
+const urlParams = new URLSearchParams(window.location.search);
+const versionParam = urlParams.get('version');
+
+console.log('Script called with parameter:', versionParam);
+
+
+if (versionParam) {
+    $.getJSON("versions.json").then(function (data) {
+        testVersionData(data.entries);
+        checkVersionRedirect(data.entries, versionParam);
     });
 }
