@@ -39,9 +39,23 @@ function stripVersionPath(path, versions) {
     return path;
 }
 
-function redirectToVersion(version) {
-    window.location.href;
-    window.location.replace;
+function redirectToVersion(version, tail) {
+    var newPath = '';
+    if (version) {
+        newPath += '/' + version;
+    }
+    if (tail) {
+        newPath += tail;
+    }
+    const hash = window.location.href.indexOf('#');
+    if (hash != -1) {
+        newPath += window.location.href.slice(hash);
+    }
+
+    console.log('redirect?', newPath, window.location.pathname);
+    if (newPath && newPath != window.location.pathname) {
+        window.location.replace(newPath);
+    }
 }
 
 if (versionParam) {
@@ -51,6 +65,10 @@ if (versionParam) {
         const useVersion = findBestVersion(versionParam, versionsAvailable);
 
         console.log('best match', useVersion);
+
+        const tail = stripVersionPath(window.location.pathname,
+                                      versionsAvailable + [versionParam]);
+        redirectToVersion(useVersion, tail);
     });
 
     var testData = [];
