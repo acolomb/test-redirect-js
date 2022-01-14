@@ -20,7 +20,7 @@ function findBestVersion(version, available) {
         }
         if (collator.compare(element, version) < 0) {
             // 
-            console.log('using previous best match', bestVersion, element, version);
+            //console.log('using previous best match', bestVersion, element, version);
             return true;
         }
         bestVersion = element;
@@ -37,7 +37,6 @@ function redirectToVersion(version) {
 if (versionParam) {
     var versionsAvailable = [];
     $.getJSON( "versions.json", function (data) {
-        console.log('versions list', data);
         versionsAvailable = data.entries;
         const useVersion = findBestVersion(versionParam, versionsAvailable);
 
