@@ -29,6 +29,16 @@ function findBestVersion(version, available) {
     return bestVersion;
 }
 
+function stripVersionPath(path, versions) {
+    var slash = path.indexOf('/', 1);
+    if (slash != -1) {
+        if (versions.indexOf(path.slice(1, slash)) != -1) {
+            path = path.slice(slash);
+        }
+    }
+    return path;
+}
+
 function redirectToVersion(version) {
     window.location.href;
     window.location.replace;
