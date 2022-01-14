@@ -46,7 +46,8 @@ if (versionParam) {
 
     var testData = [];
     $.getJSON( "testdata.json", function (testData) {
-        testData = testData.map(a => a + '-foo').sort(collator.compare).reverse();
+        //testData = testData.map(a => a + '-foo');
+        testData.sort(collator.compare).reverse();
         var items = [];
         $.each(testData, function (key, val) {
             items.push("<tr><td>" + val + "</td><td>" + findBestVersion(val, versionsAvailable) + "</td></tr>");
