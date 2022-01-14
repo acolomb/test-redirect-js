@@ -1,42 +1,57 @@
 const urlParams = new URLSearchParams(window.location.search);
 const versionParam = urlParams.get('version');
 
-console.log('Hello script!', versionParam);
+console.log('Script called with parameter:', versionParam);
 
 
-//const versionsAvailable = require('./versions.json');
+var collator = new Intl.Collator(undefined, {numeric: true, sensitivity: 'base'});
 
 
 function findBestVersion(version, available) {
     var bestVersion = '';
-    available.sort().reverse().some(function (element) {
+    // Start with highest version number, using natural sorting
+    available.sort(collator.compare).reverse();
+    // 
+    available.some(function (element) {
         if (version.startsWith(element)) {
-            if (bestVersion.length < element.length) {
-                bestVersion = element;
-            }
-        } else if (bestVersion) {
-            // Abort when we already had a prefix match, but advanced past it in
-            // the sorted list.
+            // Direct prefix match
+            bestVersion = element;
             return true;
         }
+        if (collator.compare(element, version) < 0) {
+            // 
+            console.log('using previous best match', bestVersion, element, version);
+            return true;
+        }
+        bestVersion = element;
         return false;
     });
     return bestVersion;
 }
 
 function redirectToVersion(version) {
-    
+    window.location.href;
+    window.location.replace;
 }
 
 if (versionParam) {
-    $.getJSON( "versions.json", function (data) {
+    var versionsAvailable = [];
+    $.getJSON( "/versions.json", function (data) {
         console.log('versions list', data);
-        var items = [];
-        $.each( data.entries, function( key, val ) {
-            items.push( "<li id='" + key + "'>" + val + "</li>" );
-        });
+        versionsAvailable = data.entries;
+        const useVersion = findBestVersion(versionParam, versionsAvailable);
 
-        $( "<ul/>", {
+        console.log('best match', useVersion);
+    });
+
+    var testData = [];
+    $.getJSON( "/testdata.json", function (testData) {
+        testData = testData.map(a => a + '-foo').sort(collator.compare).reverse();
+        var items = [];
+        $.each(testData, function (key, val) {
+            items.push("<tr><td>" + val + "</td><td>" + findBestVersion(val, versionsAvailable) + "</td></tr>");
+        });
+        $( "<table/>", {
             "class": "my-new-list",
             html: items.join( "" )
         }).appendTo( "body" );
