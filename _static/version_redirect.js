@@ -36,7 +36,7 @@ function redirectToVersion(version) {
 
 if (versionParam) {
     var versionsAvailable = [];
-    $.getJSON( "/versions.json", function (data) {
+    $.getJSON( "versions.json", function (data) {
         console.log('versions list', data);
         versionsAvailable = data.entries;
         const useVersion = findBestVersion(versionParam, versionsAvailable);
@@ -45,7 +45,7 @@ if (versionParam) {
     });
 
     var testData = [];
-    $.getJSON( "/testdata.json", function (testData) {
+    $.getJSON( "testdata.json", function (testData) {
         testData = testData.map(a => a + '-foo').sort(collator.compare).reverse();
         var items = [];
         $.each(testData, function (key, val) {
