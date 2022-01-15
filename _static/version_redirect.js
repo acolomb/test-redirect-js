@@ -1,5 +1,12 @@
 var collator = new Intl.Collator(undefined, {numeric: true, sensitivity: 'base'});
 
+const VERSIONS_LIST = "versions.json";
+const TEST_DATA = "testdata.json";
+
+const getVersions = $.getJSON(VERSIONS_LIST).then(function (data) {
+    data.entries.sort(collator.compare).reverse();
+    return data.entries;
+});
 
 function findBestVersion(version, available) {
     var bestVersion = '';
@@ -45,14 +52,12 @@ function redirectToPath(newPath) {
     }
 }
 
-function checkVersionRedirect(target, available) {
-    const useVersion = findBestVersion(target, available);
-    console.log('best match', useVersion);
+function redirectToVersion(target, available) {
     const tail = stripVersionPath(window.location.pathname, available + [target]);
 
     var newPath = '';
-    if (useVersion) {
-        newPath += '/' + version;
+    if (target) {
+        newPath += '/' + target;
     }
     if (tail) {
         newPath += tail;
@@ -60,8 +65,16 @@ function checkVersionRedirect(target, available) {
     redirectToPath(newPath);
 }
 
+function checkVersionRedirect(target, available) {
+    const useVersion = findBestVersion(target, available);
+    console.log('best match', useVersion);
+    const tail = stripVersionPath(window.location.pathname, available + [target]);
+
+    redirectToVersion(useVersion);
+}
+
 function testVersionData(available) {
-    $.getJSON("testdata.json").then(function (testData) {
+    $.getJSON(TEST_DATA).then(function (testData) {
         //testData = testData.map(a => a + '-foo');
         testData.sort(collator.compare).reverse();
         var items = [];
@@ -84,7 +97,7 @@ console.log('Script called with parameter:', versionParam);
 
 
 if (versionParam) {
-    $.getJSON("versions.json").then(function (data) {
+    getVersions.then(function (data) {
         testVersionData(data.entries);
         checkVersionRedirect(data.entries, versionParam);
     });
