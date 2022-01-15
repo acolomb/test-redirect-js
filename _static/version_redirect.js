@@ -75,6 +75,24 @@ function checkVersionRedirect(target, available) {
     redirectToVersion(useVersion);
 }
 
+function versionPickerOptions() {
+    console.log("generate options!");
+    getVersions.then(function (available) {
+        var items = [];
+        $.each(available, function (key, val) {
+            items.push("<option value='" + val + "'>" + val + "</option>");
+        });
+        document.getElementById('version-picker').innerHTML = items.join("");
+    });
+}
+
+function pickVersion() {
+    getVersions.then(function (available) {
+        const targetVersion = document.getElementById('version-picker').value;
+        redirectToVersion(targetVersion, available);
+    });
+}
+
 function testVersionData(available) {
     $.getJSON(TEST_DATA).then(function (testData) {
         //testData = testData.map(a => a + '-foo');
