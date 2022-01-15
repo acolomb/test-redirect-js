@@ -41,10 +41,12 @@ function stripVersionPath(path, versions) {
 }
 
 function redirectToPath(newPath) {
-    const hash = window.location.href.indexOf('#');
-    if (hash != -1) {
-        newPath += window.location.href.slice(hash);
+    const fragment = window.location.href.indexOf('#');
+    if (fragment != -1) {
+        newPath += window.location.href.slice(fragment);
     }
+    //testing only
+    //newPath = 'https://docs.syncthing.net' + newPath;
 
     console.log('redirect?', newPath, window.location.pathname);
     if (newPath && newPath != window.location.pathname) {
