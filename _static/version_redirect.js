@@ -12,21 +12,31 @@ function findBestVersion(version, available) {
     // Start with highest version number, using natural sorting
     available.sort(collator.compare).reverse();
     // 
-    available.some(function (element) {
+    const found = available.some(function (element) {
         if (version.startsWith(element)) {
             // Direct prefix match
             bestVersion = element;
             return true;
         }
         if (collator.compare(element, version) < 0) {
-            // 
-            console.log('using previous best match', bestVersion, element, version);
+            // Available version is numerically lower than requested
+            if (version.startsWith(bestVersion.slice(0, bestVersion.lastIndexOf('.')))) {
+                // Use the next higher one if it only differs in last component
+            /*
+            } else if (version.startsWith(element.slice(0, element.lastIndexOf('.')))) {
+                // Use the lower version if it only differs in last component
+                bestVersion = element;
+            */
+            } else {
+                bestVersion = '';
+            }
+            // Stop checking older versions
             return true;
         }
         bestVersion = element;
         return false;
     });
-    return bestVersion;
+    return found ? bestVersion : '';
 }
 
 function redirectToVersion(version) {
