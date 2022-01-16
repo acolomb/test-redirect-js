@@ -12,20 +12,20 @@ function findBestVersion(version, available) {
     // Start with highest version number, using natural sorting
     available.sort(collator.compare).reverse();
     // 
-    const found = available.some(function (element) {
-        if (version.startsWith(element)) {
+    const found = available.some(function (candidate) {
+        if (version.startsWith(candidate)) {
             // Direct prefix match
-            bestVersion = element;
+            bestVersion = candidate;
             return true;
         }
-        if (collator.compare(element, version) < 0) {
+        if (collator.compare(candidate, version) < 0) {
             // Available version is numerically lower than requested
             if (version.startsWith(bestVersion.slice(0, bestVersion.lastIndexOf('.')))) {
                 // Use the next higher one if it only differs in last component
             /*
-            } else if (version.startsWith(element.slice(0, element.lastIndexOf('.')))) {
+            } else if (version.startsWith(candidate.slice(0, candidate.lastIndexOf('.')))) {
                 // Use the lower version if it only differs in last component
-                bestVersion = element;
+                bestVersion = candidate;
             */
             } else {
                 bestVersion = '';
@@ -33,7 +33,7 @@ function findBestVersion(version, available) {
             // Stop checking older versions
             return true;
         }
-        bestVersion = element;
+        bestVersion = candidate;
         return false;
     });
     return found ? bestVersion : '';
