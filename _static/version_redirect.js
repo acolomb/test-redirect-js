@@ -6,11 +6,17 @@ console.log('Script called with parameter:', versionParam);
 
 var collator = new Intl.Collator(undefined, {numeric: true, sensitivity: 'base'});
 
+const VERSIONS_LIST = "/versions.json";
+const TEST_DATA = "/testdata.json";
+
+const getVersions = $.getJSON(VERSIONS_LIST).then(function (data) {
+    // Start with highest version number, using natural sorting
+    data.entries.sort(collator.compare).reverse();
+    return data.entries;
+});
 
 function findBestVersion(version, available) {
     var bestVersion = '';
-    // Start with highest version number, using natural sorting
-    available.sort(collator.compare).reverse();
     available.some(function (candidate) {
         if (version.startsWith(candidate)) {
             // Direct prefix match
@@ -42,19 +48,18 @@ function redirectToVersion(version) {
 }
 
 if (versionParam) {
-    var versionsAvailable = [];
-    $.getJSON( "versions.json", function (data) {
-        versionsAvailable = data.entries;
-        const useVersion = findBestVersion(versionParam, versionsAvailable);
+    getVersions.then(function (available) {
+        const useVersion = findBestVersion(versionParam, available);
+        redirectToVersion(useVersion, available);
     });
 
     var testData = [];
-    $.getJSON( "testdata.json", function (testData) {
+    $.getJSON(TEST_DATA, function (testData) {
         //testData = testData.map(a => a + '-foo');
         testData.sort(collator.compare).reverse();
         var items = [];
         $.each(testData, function (key, val) {
-            items.push("<tr><td>" + val + "</td><td>" + findBestVersion(val, versionsAvailable) + "</td></tr>");
+            items.push("<tr><td>" + val + "</td><td>" + findBestVersion(val, available) + "</td></tr>");
         });
         $( "<table/>", {
             "class": "my-new-list",
