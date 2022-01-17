@@ -44,11 +44,8 @@ function redirectToVersion(version) {
 if (versionParam) {
     var versionsAvailable = [];
     $.getJSON( "versions.json", function (data) {
-        console.log('versions list', data);
         versionsAvailable = data.entries;
         const useVersion = findBestVersion(versionParam, versionsAvailable);
-
-        console.log('best match', useVersion);
     });
 
     var testData = [];
