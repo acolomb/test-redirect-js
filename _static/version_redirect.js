@@ -1,9 +1,3 @@
-const urlParams = new URLSearchParams(window.location.search);
-const versionParam = urlParams.get('version');
-
-console.log('Script called with parameter:', versionParam);
-
-
 var collator = new Intl.Collator(undefined, {numeric: true, sensitivity: 'base'});
 
 const VERSIONS_LIST = "/versions.json";
@@ -76,6 +70,13 @@ function redirectToVersion(target, available) {
     }
     redirectToPath(newPath);
 }
+
+
+const urlParams = new URLSearchParams(window.location.search);
+const versionParam = urlParams.get('version');
+
+console.log('Script called with parameter:', versionParam);
+
 
 if (versionParam) {
     getVersions.then(function (available) {
