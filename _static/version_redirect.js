@@ -42,6 +42,28 @@ function findBestVersion(version, available) {
     return bestVersion;
 }
 
+function stripVersionPath(path, versions) {
+    var slash = path.indexOf('/', 1);
+    if (slash != -1) {
+        if (versions.indexOf(path.slice(1, slash)) != -1) {
+            path = path.slice(slash);
+        }
+    }
+    return path;
+}
+
+function redirectToPath(newPath) {
+    const fragment = window.location.href.indexOf('#');
+    if (fragment != -1) {
+        newPath += window.location.href.slice(fragment);
+    }
+
+    console.log('redirect?', newPath, window.location.pathname);
+    if (newPath && newPath != window.location.pathname) {
+        window.location.replace(newPath);
+    }
+}
+
 function redirectToVersion(version) {
     window.location.href;
     window.location.replace;
