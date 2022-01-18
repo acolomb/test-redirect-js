@@ -52,18 +52,24 @@ if (versionParam) {
         const useVersion = findBestVersion(versionParam, available);
         redirectToVersion(useVersion, available);
     });
+}
 
-    var testData = [];
-    $.getJSON(TEST_DATA, function (testData) {
+function testVersionData(available) {
+    $.getJSON(TEST_DATA).then(function (testData) {
         //testData = testData.map(a => a + '-foo');
         testData.sort(collator.compare).reverse();
         var items = [];
         $.each(testData, function (key, val) {
-            items.push("<tr><td>" + val + "</td><td>" + findBestVersion(val, available) + "</td></tr>");
+            items.push("<tr><td>" + val + "</td><td>"
+                       + findBestVersion(val, available) + "</td></tr>");
         });
-        $( "<table/>", {
+        $("<table/>", {
             "class": "my-new-list",
-            html: items.join( "" )
-        }).appendTo( "body" );
+            html: items.join("")
+        }).appendTo("body");
     });
 }
+
+getVersions.then(function (available) {
+    testVersionData(available);
+});
