@@ -64,9 +64,17 @@ function redirectToPath(newPath) {
     }
 }
 
-function redirectToVersion(version) {
-    window.location.href;
-    window.location.replace;
+function redirectToVersion(target, available) {
+    const tail = stripVersionPath(window.location.pathname, available + [target]);
+
+    var newPath = '';
+    if (target) {
+        newPath += '/' + target;
+    }
+    if (tail) {
+        newPath += tail;
+    }
+    redirectToPath(newPath);
 }
 
 if (versionParam) {
