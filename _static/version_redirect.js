@@ -1,7 +1,7 @@
 var collator = new Intl.Collator(undefined, {numeric: true, sensitivity: 'base'});
 
-const VERSIONS_LIST = "/versions.json";
-const TEST_DATA = "/testdata.json";
+const VERSIONS_LIST = "versions.json";
+const TEST_DATA = "testdata.json";
 
 const getVersions = $.getJSON(VERSIONS_LIST).then(function (data) {
     // Start with highest version number, using natural sorting
