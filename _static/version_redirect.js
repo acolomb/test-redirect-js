@@ -71,6 +71,24 @@ function redirectToVersion(target, available) {
     redirectToPath(newPath);
 }
 
+function setVersionPickerOptions() {
+    console.log("generate options!");
+    getVersions.then(function (available) {
+        var items = [];
+        $.each(available, function (key, val) {
+            items.push("<option value='" + val + "'>" + val + "</option>");
+        });
+        document.getElementById('version-picker').innerHTML = items.join("");
+    });
+}
+
+function pickVersion() {
+    getVersions.then(function (available) {
+        const targetVersion = document.getElementById('version-picker').value;
+        redirectToVersion(targetVersion, available);
+    });
+}
+
 
 const urlParams = new URLSearchParams(window.location.search);
 const versionParam = urlParams.get('version');
